@@ -2,12 +2,12 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
 export default function ListagemScreen({ route }: { route: any }) {
-    const { email } = route.params;
+    const email = route?.params?.email || 'Email não fornecido';
 
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>Bem-vindo à Tela Inicial!</Text>
-            <Text style={styles.title}>Seu e-mail é: {email}</Text>
+            <Text style={styles.title}>- LISTAGEM -</Text>
+            <Text style={styles.subtitle}>Área destinada para cadastro de livros.</Text>
         </View>
     );
 }
@@ -23,11 +23,12 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 32,
         color: '#F5F5DC',
-        marginBottom: 20,
+        marginBottom: 10, // Ajuste o espaçamento
         fontWeight: 'bold',
     },
-    emailText: {
+    subtitle: {
         fontSize: 18,
         color: '#F5F5DC',
+        textAlign: 'center', // Alinha o texto ao centro
     },
 });

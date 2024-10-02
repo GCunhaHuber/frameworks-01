@@ -1,12 +1,46 @@
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView, Platform, Alert } from 'react-native';
 import { Link } from 'expo-router';
-import { useState } from 'react';
 
 export default function CadastroScreen() {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
+
+    const showAlert = (title: string, message: string) => {
+        if (Platform.OS === 'web') {
+            // No ambiente web, usamos window.alert
+            window.alert(`${title}: ${message}`);
+        } else {
+            // No ambiente nativo, usamos Alert do React Native
+            Alert.alert(title, message);
+        }
+    };
+
+    const handleCadastro = () => {
+        const trimmedName = name.trim();
+        const trimmedEmail = email.trim();
+        const trimmedPassword = password.trim();
+        const trimmedConfirmPassword = confirmPassword.trim();
+
+        // Debugging logs
+        console.log('Trimmed Name:', trimmedName);
+        console.log('Trimmed Email:', trimmedEmail);
+        console.log('Trimmed Password:', trimmedPassword);
+        console.log('Trimmed Confirm Password:', trimmedConfirmPassword);
+
+        if (!trimmedName || !trimmedEmail || !trimmedPassword || !trimmedConfirmPassword) {
+            console.log('Erro: Campos vazios.');
+            showAlert('Erro', 'Por favor, preencha todos os campos corretamente.');
+        } else if (trimmedPassword !== trimmedConfirmPassword) {
+            console.log('Erro: Senhas não coincidem.');
+            showAlert('Erro', 'As senhas não coincidem.');
+        } else {
+            console.log('Sucesso: Cadastro concluído.');
+            showAlert('Sucesso', 'Cadastro concluído com sucesso!');
+        }
+    };
 
     return (
         <View style={styles.container}>
@@ -49,13 +83,12 @@ export default function CadastroScreen() {
                     secureTextEntry
                 />
 
-                <TouchableOpacity style={styles.button}>
+                <TouchableOpacity style={styles.button} onPress={handleCadastro}>
                     <Text style={styles.buttonText}>Cadastrar</Text>
                 </TouchableOpacity>
 
                 <Link href="/login" style={styles.linkText}>Já tem uma conta? Fazer login</Link>
                 <Link href="/" style={styles.linkText}>Ir para a home</Link>
-
             </ScrollView>
         </View>
     );
@@ -69,17 +102,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         backgroundColor: '#1E3A61',
         padding: 20,
-    },
-    header: {
-        flexDirection: 'row',
-        justifyContent: 'space-around',
-        width: '100%',
-        maxWidth: 500,
-        paddingVertical: 10,
-        backgroundColor: '#61dafb',
-        borderBottomWidth: 2,
-        borderBottomColor: '#20232a',
-        alignSelf: 'center',
     },
     scrollContainer: {
         alignItems: 'center',
