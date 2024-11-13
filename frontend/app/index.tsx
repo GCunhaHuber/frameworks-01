@@ -1,37 +1,70 @@
-import React from 'react';
-import { View, Text, StyleSheet, Image, ScrollView, Dimensions } from 'react-native';
-import Header from '../components/Header';
-import { Link } from 'expo-router';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, Image, ScrollView, useWindowDimensions, TouchableOpacity } from 'react-native';
+import { Link, Href } from 'expo-router';
+import { Feather } from '@expo/vector-icons';
 
 export default function HomeScreen() {
-  const { width } = Dimensions.get('window');
+  const { width } = useWindowDimensions();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const isSmallScreen = width < 600;
 
   return (
     <View style={styles.container}>
-      <Header />
+      {/* Navbar fixa */}
+      <View style={styles.navbar}>
+        <Text style={styles.navTitle}>Gráfica Pelotense</Text>
+        {isSmallScreen ? (
+          <TouchableOpacity 
+            onPress={() => setIsMenuOpen(!isMenuOpen)}
+            style={styles.hamburgerButton}
+          >
+            <Feather name={isMenuOpen ? 'x' : 'menu'} size={24} color="#fff" />
+          </TouchableOpacity>
+        ) : (
+          <View style={styles.navLinks}>
+            <Link href={"/" as Href} style={styles.navLink}>Home</Link>
+            <Link href={"/servicos" as Href} style={styles.navLink}>Serviços</Link>
+            <Link href={"/sobre" as Href} style={styles.navLink}>Sobre</Link>
+            <Link href={"/contato" as Href} style={styles.navLink}>Contato</Link>
+            <Link href={"/cadastro" as Href} style={styles.navLink}>Cadastro</Link>
+            <Link href={"/login" as Href} style={styles.navLink}>Login</Link>
+          </View>
+        )}
+      </View>
 
-      <ScrollView style={{ maxWidth: 500 }}>
+      {/* Menu dropdown para telas pequenas */}
+      {isSmallScreen && isMenuOpen && (
+        <View style={styles.dropdownMenu}>
+          <Link href={"/" as Href} style={styles.dropdownLink}>Home</Link>
+          <Link href={"/servicos" as Href} style={styles.dropdownLink}>Serviços</Link>
+          <Link href={"/sobre" as Href} style={styles.dropdownLink}>Sobre</Link>
+          <Link href={"/contato" as Href} style={styles.dropdownLink}>Contato</Link>
+          <Link href={"/cadastro" as Href} style={styles.dropdownLink}>Cadastro</Link>
+          <Link href={"/login" as Href} style={styles.dropdownLink}>Login</Link>
+        </View>
+      )}
+
+      {/* ScrollView para rolar o conteúdo */}
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
         <Text style={styles.title}>Bem-vindo à Gráfica Pelotense!</Text>
 
-        <View style={styles.imageContainer}>
-          <Image
-            style={[styles.image, { width: width * 0.4, height: (width * 0.4) * 0.6 }]}
-            source={{ uri: '../assets/images/frase-home.png' }}
-            resizeMode="contain"
-          />
-        </View>
+        <Image
+          style={[styles.image, { width: width * 0.85, height: (width * 0.85) * 0.6 }]}
+          source={{ uri: '../assets/images/frase-home.png' }}
+          resizeMode="contain"
+        />
 
         <Text style={styles.description}>
           A Gráfica Pelotense oferece uma ampla gama de serviços de impressão, desde cartões de visita até livros de alta qualidade.
           Trabalhamos com dedicação para entregar o melhor produto aos nossos clientes.
         </Text>
 
-        <View style={styles.buttonContainer}>
-          <Link href="/contato" style={styles.button}>
+        {/* Botões alinhados */}
+        <View style={isSmallScreen ? styles.buttonColumn : styles.buttonRow}>
+          <Link href={"/servicos" as Href} style={styles.button}>
             <Text style={styles.buttonText}>Conheça nossos serviços</Text>
           </Link>
-
-          <Link href="/contato" style={styles.button}>
+          <Link href={"/contato" as Href} style={styles.button}>
             <Text style={styles.buttonText}>Entre em contato</Text>
           </Link>
         </View>
@@ -43,55 +76,95 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
     backgroundColor: '#1E3A61',
-    padding: 20,
+  },
+  navbar: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    backgroundColor: '#20232a',
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    position: 'absolute',
+    top: 0,
+    width: '100%',
+    zIndex: 10,
+  },
+  navTitle: {
+    color: '#61dafb',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  navLinks: {
+    flexDirection: 'row',
+  },
+  navLink: {
+    color: '#fff',
+    fontSize: 16,
+    marginHorizontal: 10,
+  },
+  hamburgerButton: {
+    padding: 10,
+  },
+  dropdownMenu: {
+    backgroundColor: '#20232a',
+    paddingVertical: 10,
+    position: 'absolute',
+    top: 56,
+    width: '100%',
+    zIndex: 20,
+    elevation: 5, // Para Android, garantir que esteja acima
+  },
+  dropdownLink: {
+    color: '#61dafb',
+    fontSize: 16,
+    paddingVertical: 10,
+    textAlign: 'center',
+  },
+  scrollContainer: {
+    alignItems: 'center',
+    paddingTop: 80, // Ajustado para não cobrir o conteúdo com o navbar fixo
+    paddingBottom: 20,
+    paddingHorizontal: 16,
   },
   title: {
-    marginTop: 16,
-    paddingVertical: 8,
-    borderWidth: 4,
-    borderColor: '#20232a',
-    borderRadius: 6,
-    backgroundColor: '#61dafb',
-    color: '#20232a',
-    textAlign: 'center',
-    fontSize: 28,
+    fontSize: 24,
     fontWeight: 'bold',
+    color: '#61dafb',
+    textAlign: 'center',
     marginBottom: 20,
-  },
-  imageContainer: {
-    marginBottom: 20,
-    alignItems: 'center',
-    borderRadius: 20,
-    overflow: 'hidden',
   },
   image: {
     borderRadius: 20,
+    marginBottom: 20,
   },
   description: {
     fontSize: 16,
     color: '#F5F5DC',
-    marginBottom: 20,
     textAlign: 'center',
-    paddingHorizontal: 10,
+    marginBottom: 20,
+    width: '100%',
   },
-  buttonContainer: {
+  buttonRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     width: '100%',
     maxWidth: 500,
   },
+  buttonColumn: {
+    flexDirection: 'column',
+    width: '100%',
+    alignItems: 'center',
+  },
   button: {
     backgroundColor: '#61dafb',
-    padding: 15,
+    paddingVertical: 15,
+    paddingHorizontal: 20,
     borderRadius: 10,
     alignItems: 'center',
-    textAlign: 'center',
-    marginHorizontal: 10,
     flex: 1,
+    marginHorizontal: 10,
+    marginBottom: 10,
   },
   buttonText: {
     color: '#20232a',

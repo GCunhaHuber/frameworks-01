@@ -1,8 +1,13 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, ScrollView, StyleSheet } from 'react-native';
-import Header from '../components/Header';
+import { View, Text, TextInput, TouchableOpacity, useWindowDimensions,  ScrollView, StyleSheet } from 'react-native';
+import { Link, Href } from 'expo-router';
+import { Feather } from '@expo/vector-icons';
 
 export default function ContatoScreen() {
+  const { width } = useWindowDimensions(); // Alterado para usar useWindowDimensions
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const isSmallScreen = width < 600;
+
   const [nome, setNome] = useState('');
   const [email, setEmail] = useState('');
   const [mensagem, setMensagem] = useState('');
@@ -15,7 +20,40 @@ export default function ContatoScreen() {
 
   return (
     <View style={styles.container}>
-      <Header />
+      {/* Navbar fixa */}
+      <View style={styles.navbar}>
+        <Text style={styles.navTitle}>Sobre a Gráfica Pelotense</Text>
+        {isSmallScreen ? (
+          <TouchableOpacity 
+            onPress={() => setIsMenuOpen(!isMenuOpen)}
+            style={styles.hamburgerButton}
+          >
+            <Feather name={isMenuOpen ? 'x' : 'menu'} size={24} color="#fff" />
+          </TouchableOpacity>
+        ) : (
+          <View style={styles.navLinks}>
+            <Link href={"/" as Href} style={styles.navLink}>Home</Link>
+            <Link href={"/servicos" as Href} style={styles.navLink}>Serviços</Link>
+            <Link href={"/sobre" as Href} style={styles.navLink}>Sobre</Link>
+            <Link href={"/contato" as Href} style={styles.navLink}>Contato</Link>
+            <Link href={"/cadastro" as Href} style={styles.navLink}>Cadastro</Link>
+            <Link href={"/login" as Href} style={styles.navLink}>Login</Link>
+          </View>
+        )}
+      </View>
+
+      {/* Menu dropdown para telas pequenas */}
+      {isSmallScreen && isMenuOpen && (
+        <View style={styles.dropdownMenu}>
+          <Link href={"/" as Href} style={styles.dropdownLink}>Home</Link>
+          <Link href={"/servicos" as Href} style={styles.dropdownLink}>Serviços</Link>
+          <Link href={"/sobre" as Href} style={styles.dropdownLink}>Sobre</Link>
+          <Link href={"/contato" as Href} style={styles.dropdownLink}>Contato</Link>
+          <Link href={"/cadastro" as Href} style={styles.dropdownLink}>Cadastro</Link>
+          <Link href={"/login" as Href} style={styles.dropdownLink}>Login</Link>
+        </View>
+      )}
+
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <Text style={styles.title}>Entre em Contato</Text>
 
@@ -55,11 +93,55 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#1E3A61',
-    padding: 20,
+  },
+  navbar: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    backgroundColor: '#20232a',
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    position: 'absolute',
+    top: 0,
+    width: '100%',
+    zIndex: 10,
+  },
+  navTitle: {
+    color: '#61dafb',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  navLinks: {
+    flexDirection: 'row',
+  },
+  navLink: {
+    color: '#fff',
+    fontSize: 16,
+    marginHorizontal: 10,
+  },
+  hamburgerButton: {
+    padding: 10,
+  },
+  dropdownMenu: {
+    backgroundColor: '#20232a',
+    paddingVertical: 10,
+    position: 'absolute',
+    top: 56,
+    width: '100%',
+    zIndex: 20,
+    elevation: 5, // Para Android, garantir que esteja acima
+  },
+  dropdownLink: {
+    color: '#61dafb',
+    fontSize: 16,
+    paddingVertical: 10,
+    textAlign: 'center',
   },
   scrollContainer: {
     alignItems: 'center',
-    paddingVertical: 20,
+    paddingTop: 80,
+    paddingBottom: 20,
+    paddingHorizontal: 16,
   },
   title: {
     fontSize: 28,

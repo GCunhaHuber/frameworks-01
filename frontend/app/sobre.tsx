@@ -1,22 +1,71 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, Image, ScrollView, Dimensions, TouchableOpacity } from 'react-native';
+import { Link, Href } from 'expo-router';
+import { Feather } from '@expo/vector-icons';
 import Header from '../components/Header';
-import { View, Text, StyleSheet, Image, ScrollView, Dimensions } from 'react-native';
 
 export default function SobreScreen() {
-  const { width } = Dimensions.get('window');
+  const { width, height } = Dimensions.get('window');
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isSmallScreen, setIsSmallScreen] = useState(width < 600);
+
+  // Detectando mudança de tela
+  React.useEffect(() => {
+    const handleResize = () => {
+      setIsSmallScreen(Dimensions.get('window').width < 600);
+    };
+
+    Dimensions.addEventListener('change', handleResize);
+    return () => {
+      Dimensions.removeEventListener('change', handleResize);
+    };
+  }, []);
 
   return (
     <View style={styles.container}>
-      <Header />
+      {/* Navbar fixa */}
+      <View style={styles.navbar}>
+        <Text style={styles.navTitle}>Sobre a Gráfica Pelotense</Text>
+        {isSmallScreen ? (
+          <TouchableOpacity 
+            onPress={() => setIsMenuOpen(!isMenuOpen)}
+            style={styles.hamburgerButton}
+          >
+            <Feather name={isMenuOpen ? 'x' : 'menu'} size={24} color="#fff" />
+          </TouchableOpacity>
+        ) : (
+          <View style={styles.navLinks}>
+            <Link href={"/" as Href} style={styles.navLink}>Home</Link>
+            <Link href={"/servicos" as Href} style={styles.navLink}>Serviços</Link>
+            <Link href={"/sobre" as Href} style={styles.navLink}>Sobre</Link>
+            <Link href={"/contato" as Href} style={styles.navLink}>Contato</Link>
+            <Link href={"/cadastro" as Href} style={styles.navLink}>Cadastro</Link>
+            <Link href={"/login" as Href} style={styles.navLink}>Login</Link>
+          </View>
+        )}
+      </View>
 
-      <ScrollView style={{ maxWidth: 500 }}>
+      {/* Menu dropdown para telas pequenas */}
+      {isSmallScreen && isMenuOpen && (
+        <View style={styles.dropdownMenu}>
+          <Link href={"/" as Href} style={styles.dropdownLink}>Home</Link>
+          <Link href={"/servicos" as Href} style={styles.dropdownLink}>Serviços</Link>
+          <Link href={"/sobre" as Href} style={styles.dropdownLink}>Sobre</Link>
+          <Link href={"/contato" as Href} style={styles.dropdownLink}>Contato</Link>
+          <Link href={"/cadastro" as Href} style={styles.dropdownLink}>Cadastro</Link>
+          <Link href={"/login" as Href} style={styles.dropdownLink}>Login</Link>
+        </View>
+      )}
+
+      {/* Corpo do conteúdo */}
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
         <Text style={styles.title}>Sobre a Gráfica Pelotense</Text>
 
         <View style={styles.imageContainer}>
           <Image
-            style={[styles.image, { width: width * 0.2, height: (width * 0.4) * 0.6 }]}
+            style={[styles.image, { width: width * 0.8, height: (width * 0.8) * 0.6 }]} // A imagem agora tem uma largura proporcional
             source={require('../assets/images/localizacao.jpg')}
-            resizeMode="cover"
+            resizeMode="contain" // Melhor escolha para manter a proporção da imagem
           />
         </View>
 
@@ -31,7 +80,6 @@ export default function SobreScreen() {
         <Text style={styles.text}>
           Venha nos visitar ou entre em contato para saber mais sobre nossos serviços!
         </Text>
-
       </ScrollView>
     </View>
   );
@@ -40,47 +88,69 @@ export default function SobreScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
     backgroundColor: '#1E3A61',
-    padding: 20,
   },
-  header: {
+  navbar: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    backgroundColor: '#20232a',
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    position: 'absolute',
+    top: 0,
     width: '100%',
-    maxWidth: 500,
-    paddingVertical: 10,
-    backgroundColor: '#61dafb',
-    borderBottomWidth: 2,
-    borderBottomColor: '#20232a',
-    alignSelf: 'center',
+    zIndex: 10,
   },
-  linkText: {
-    color: '#20232a',
-    textDecorationLine: 'none',
-    fontSize: 16,
+  navTitle: {
+    color: '#61dafb',
+    fontSize: 18,
     fontWeight: 'bold',
+  },
+  navLinks: {
+    flexDirection: 'row',
+  },
+  navLink: {
+    color: '#fff',
+    fontSize: 16,
+    marginHorizontal: 10,
+  },
+  hamburgerButton: {
+    padding: 10,
+  },
+  dropdownMenu: {
+    backgroundColor: '#20232a',
+    paddingVertical: 10,
+    position: 'absolute',
+    top: 56,
+    width: '100%',
+    zIndex: 20,
+    elevation: 5, // Para Android, garantir que esteja acima
+  },
+  dropdownLink: {
+    color: '#61dafb',
+    fontSize: 16,
+    paddingVertical: 10,
+    textAlign: 'center',
+  },
+  scrollContainer: {
+    alignItems: 'center',
+    paddingTop: 80,
+    paddingBottom: 20,
+    paddingHorizontal: 16,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#61dafb',
+    textAlign: 'center',
+    marginBottom: 20,
   },
   imageContainer: {
     marginBottom: 20,
     alignItems: 'center',
     borderRadius: 20,
     overflow: 'hidden',
-  },
-  title: {
-    marginTop: 16,
-    paddingVertical: 8,
-    borderWidth: 4,
-    borderColor: '#20232a',
-    borderRadius: 6,
-    backgroundColor: '#61dafb',
-    color: '#20232a',
-    textAlign: 'center',
-    fontSize: 30,
-    fontWeight: 'bold',
-    marginBottom: 20,
   },
   image: {
     borderRadius: 20,

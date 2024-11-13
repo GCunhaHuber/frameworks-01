@@ -1,20 +1,33 @@
 import React, { useState } from 'react';
 import { Link, useRouter } from 'expo-router';
 import { View, Text, StyleSheet, TouchableOpacity, TextInput, ScrollView } from 'react-native';
+import axios from 'axios';
 
 export default function LoginScreen() {
     const router = useRouter();
     const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+    const [senha, setSenha] = useState('');
     const [wrongInput, setWrongInput] = useState(false);
 
-    const handleLogin = () => {
-        const validEmail = 'gabriel';
-        const validPassword = '12345';
+    const handleLogin = async () => {
+        try {
+            // Faz a requisição ao JSON Server para buscar o usuário pelo email e senha
+            const response = await axios.get(`http://localhost:3001/usuarios`, {
+                params: {
+                    email,
+                    senha
+                }
+            });
 
-        if (email === validEmail && password === validPassword) {
-            router.push({ pathname: '/listagem', params: { email } });
-        } else {
+            if (response.data.length > 0) {
+                // Usuário encontrado, redireciona para a tela de listagem
+                router.push({ pathname: '/listagem', params: { email } });
+            } else {
+                // Nenhum usuário corresponde aos dados de login
+                setWrongInput(true);
+            }
+        } catch (error) {
+            console.error("Erro ao tentar fazer login:", error);
             setWrongInput(true);
         }
     };
@@ -38,8 +51,8 @@ export default function LoginScreen() {
                     style={styles.input}
                     placeholder="Senha"
                     placeholderTextColor="#DDD"
-                    value={password}
-                    onChangeText={setPassword}
+                    value={senha}
+                    onChangeText={setSenha}
                     secureTextEntry
                 />
 
@@ -50,7 +63,6 @@ export default function LoginScreen() {
 
                 <Link href="/cadastro" style={styles.linkText}>Criar uma conta</Link>
                 <Link href="/" style={styles.linkText}>Ir para a home</Link>
-
             </ScrollView>
         </View>
     );

@@ -1,19 +1,18 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView, Platform, Alert } from 'react-native';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView, Platform, Alert, useWindowDimensions } from 'react-native';
 import { Link } from 'expo-router';
 
 export default function CadastroScreen() {
+    const { width } = useWindowDimensions();
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
 
-    const showAlert = (title: string, message: string) => {
+    const showAlert = (title, message) => {
         if (Platform.OS === 'web') {
-            // No ambiente web, usamos window.alert
             window.alert(`${title}: ${message}`);
         } else {
-            // No ambiente nativo, usamos Alert do React Native
             Alert.alert(title, message);
         }
     };
@@ -24,23 +23,19 @@ export default function CadastroScreen() {
         const trimmedPassword = password.trim();
         const trimmedConfirmPassword = confirmPassword.trim();
 
-        // Debugging logs
-        console.log('Trimmed Name:', trimmedName);
-        console.log('Trimmed Email:', trimmedEmail);
-        console.log('Trimmed Password:', trimmedPassword);
-        console.log('Trimmed Confirm Password:', trimmedConfirmPassword);
-
         if (!trimmedName || !trimmedEmail || !trimmedPassword || !trimmedConfirmPassword) {
-            console.log('Erro: Campos vazios.');
             showAlert('Erro', 'Por favor, preencha todos os campos corretamente.');
         } else if (trimmedPassword !== trimmedConfirmPassword) {
-            console.log('Erro: Senhas não coincidem.');
             showAlert('Erro', 'As senhas não coincidem.');
         } else {
-            console.log('Sucesso: Cadastro concluído.');
             showAlert('Sucesso', 'Cadastro concluído com sucesso!');
         }
     };
+
+    // Define estilos dinâmicos de acordo com a largura da tela
+    const isLargeScreen = width > 1280;
+    const inputWidth = isLargeScreen ? '80%' : '100%';
+    const buttonWidth = isLargeScreen ? '80%' : '100%';
 
     return (
         <View style={styles.container}>
@@ -48,7 +43,7 @@ export default function CadastroScreen() {
                 <Text style={styles.title}>Cadastro</Text>
 
                 <TextInput
-                    style={styles.input}
+                    style={[styles.input, { width: inputWidth }]}
                     placeholder="Nome"
                     placeholderTextColor="#DDD"
                     value={name}
@@ -56,7 +51,7 @@ export default function CadastroScreen() {
                 />
 
                 <TextInput
-                    style={styles.input}
+                    style={[styles.input, { width: inputWidth }]}
                     placeholder="E-mail"
                     placeholderTextColor="#DDD"
                     value={email}
@@ -66,7 +61,7 @@ export default function CadastroScreen() {
                 />
 
                 <TextInput
-                    style={styles.input}
+                    style={[styles.input, { width: inputWidth }]}
                     placeholder="Senha"
                     placeholderTextColor="#DDD"
                     value={password}
@@ -75,7 +70,7 @@ export default function CadastroScreen() {
                 />
 
                 <TextInput
-                    style={styles.input}
+                    style={[styles.input, { width: inputWidth }]}
                     placeholder="Confirmar Senha"
                     placeholderTextColor="#DDD"
                     value={confirmPassword}
@@ -83,7 +78,7 @@ export default function CadastroScreen() {
                     secureTextEntry
                 />
 
-                <TouchableOpacity style={styles.button} onPress={handleCadastro}>
+                <TouchableOpacity style={[styles.button, { width: buttonWidth }]} onPress={handleCadastro}>
                     <Text style={styles.buttonText}>Cadastrar</Text>
                 </TouchableOpacity>
 
@@ -97,7 +92,6 @@ export default function CadastroScreen() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: '#1E3A61',
@@ -106,7 +100,8 @@ const styles = StyleSheet.create({
     scrollContainer: {
         alignItems: 'center',
         paddingVertical: 20,
-        width: 500,
+        width: '100%',
+        maxWidth: 700,
     },
     title: {
         fontSize: 32,
@@ -115,7 +110,8 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
     input: {
-        width: '100%',
+        maxWidth: 1200,
+        minWidth: 300,
         height: 60,
         backgroundColor: '#3E5C89',
         borderRadius: 10,
@@ -125,7 +121,6 @@ const styles = StyleSheet.create({
         fontSize: 18,
     },
     button: {
-        width: '100%',
         height: 60,
         backgroundColor: '#F5F5DC',
         borderRadius: 10,

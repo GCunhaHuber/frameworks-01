@@ -1,0 +1,20 @@
+{
+  "usuarios": [
+    { "id": 1, "email": "gabriel@gmail.com", "senha": "12345" },
+    { "id": 2, "email": "igor@gmail.com", "senha": "12345" }
+  ],
+  "livros": [
+    {
+      "id": 1,
+      "title": "Contos Gauchescos",
+      "autor": "Joao Simoes Lopes Neto",
+      "capa": "https://cdn.kobo.com/book-images/e53ac409-39d0-4ee7-8d92-23e2f3923fdc/1200/1200/False/contos-gauchescos-9.jpg"
+    },
+    {
+      "id": 2,
+      "title": "Lendas do Sul",
+      "autor": "Joao Simoes Lopes Neto",
+      "capa": "https://m.aabbportoalegre.com.br/intranet/modulos/biblioteca/imgs/8562.jpg"
+    }
+  ]
+}
