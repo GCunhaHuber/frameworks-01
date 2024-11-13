@@ -22,7 +22,7 @@ export default function ContatoScreen() {
     <View style={styles.container}>
       {/* Navbar fixa */}
       <View style={styles.navbar}>
-        <Text style={styles.navTitle}>Sobre a Gráfica Pelotense</Text>
+        <Text style={styles.navTitle}>Contato</Text>
         {isSmallScreen ? (
           <TouchableOpacity 
             onPress={() => setIsMenuOpen(!isMenuOpen)}
