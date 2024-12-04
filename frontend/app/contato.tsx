@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, useWindowDimensions,  ScrollView, StyleSheet } from 'react-native';
-import { Link, Href } from 'expo-router';
+import { View, Text, TextInput, TouchableOpacity, useWindowDimensions, ScrollView, StyleSheet, Alert, Platform } from 'react-native';
+import { Link } from 'expo-router';
 import { Feather } from '@expo/vector-icons';
 
 export default function ContatoScreen() {
-  const { width } = useWindowDimensions(); // Alterado para usar useWindowDimensions
+  const { width } = useWindowDimensions();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const isSmallScreen = width < 600;
 
@@ -12,10 +12,59 @@ export default function ContatoScreen() {
   const [email, setEmail] = useState('');
   const [mensagem, setMensagem] = useState('');
 
-  const handleEnviar = () => {
-    console.log('Nome:', nome);
-    console.log('E-mail:', email);
-    console.log('Mensagem:', mensagem);
+    const showAlert = (title: string, message: string) => {
+        if (Platform.OS === 'web') {
+            window.alert(`${title}: ${message}`);
+        } else {
+            Alert.alert(title, message);
+        }
+    };
+
+  const handleEnviar = async () => {
+    const trimmedNome = nome.trim();
+    const trimmedEmail = email.trim();
+    const trimmedMensagem = mensagem.trim();
+
+    if (!trimmedNome || !trimmedEmail || !trimmedMensagem) {
+      showAlert('Erro', 'Por favor, preencha todos os campos corretamente.');
+      return;
+    }
+
+    try {
+      const response = await fetch('http://localhost:3001/contatos');
+      const conts = await response.json();
+
+      const nextId = conts.length > 0 ? Math.max(...conts.map((u) => u.id)) + 1 : 1;
+
+      const contatoData = {
+        id: nextId,
+        nome: trimmedNome,
+        email: trimmedEmail,
+        mensagem: trimmedMensagem,
+      };
+
+      const postResponse = await fetch('http://localhost:3001/contatos', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(contatoData),
+      });
+
+      if (postResponse.ok) {
+        const data = await postResponse.json();
+        showAlert('Sucesso', `Sua mensagem foi enviada com sucesso! ID: ${data.id}`);
+        setNome('');
+        setEmail('');
+        setMensagem('');
+      } else {
+        const error = await postResponse.json();
+        showAlert('Erro', `Falha ao enviar mensagem: ${error.message || 'Erro desconhecido'}`);
+      }
+    } catch (error) {
+      showAlert('Erro', 'Não foi possível conectar ao servidor.');
+      console.error(error);
+    }
   };
 
   return (
@@ -24,7 +73,7 @@ export default function ContatoScreen() {
       <View style={styles.navbar}>
         <Text style={styles.navTitle}>Contato</Text>
         {isSmallScreen ? (
-          <TouchableOpacity 
+          <TouchableOpacity
             onPress={() => setIsMenuOpen(!isMenuOpen)}
             style={styles.hamburgerButton}
           >
@@ -32,12 +81,12 @@ export default function ContatoScreen() {
           </TouchableOpacity>
         ) : (
           <View style={styles.navLinks}>
-            <Link href={"/" as Href} style={styles.navLink}>Home</Link>
-            <Link href={"/servicos" as Href} style={styles.navLink}>Serviços</Link>
-            <Link href={"/sobre" as Href} style={styles.navLink}>Sobre</Link>
-            <Link href={"/contato" as Href} style={styles.navLink}>Contato</Link>
-            <Link href={"/cadastro" as Href} style={styles.navLink}>Cadastro</Link>
-            <Link href={"/login" as Href} style={styles.navLink}>Login</Link>
+            <Link href="/" style={styles.navLink}>Home</Link>
+            <Link href="/servicos" style={styles.navLink}>Serviços</Link>
+            <Link href="/sobre" style={styles.navLink}>Sobre</Link>
+            <Link href="/contato" style={styles.navLink}>Contato</Link>
+            <Link href="/cadastro" style={styles.navLink}>Cadastro</Link>
+            <Link href="/login" style={styles.navLink}>Login</Link>
           </View>
         )}
       </View>
@@ -45,12 +94,12 @@ export default function ContatoScreen() {
       {/* Menu dropdown para telas pequenas */}
       {isSmallScreen && isMenuOpen && (
         <View style={styles.dropdownMenu}>
-          <Link href={"/" as Href} style={styles.dropdownLink}>Home</Link>
-          <Link href={"/servicos" as Href} style={styles.dropdownLink}>Serviços</Link>
-          <Link href={"/sobre" as Href} style={styles.dropdownLink}>Sobre</Link>
-          <Link href={"/contato" as Href} style={styles.dropdownLink}>Contato</Link>
-          <Link href={"/cadastro" as Href} style={styles.dropdownLink}>Cadastro</Link>
-          <Link href={"/login" as Href} style={styles.dropdownLink}>Login</Link>
+          <Link href="/" style={styles.dropdownLink}>Home</Link>
+          <Link href="/servicos" style={styles.dropdownLink}>Serviços</Link>
+          <Link href="/sobre" style={styles.dropdownLink}>Sobre</Link>
+          <Link href="/contato" style={styles.dropdownLink}>Contato</Link>
+          <Link href="/cadastro" style={styles.dropdownLink}>Cadastro</Link>
+          <Link href="/login" style={styles.dropdownLink}>Login</Link>
         </View>
       )}
 
@@ -129,7 +178,7 @@ const styles = StyleSheet.create({
     top: 56,
     width: '100%',
     zIndex: 20,
-    elevation: 5, // Para Android, garantir que esteja acima
+    elevation: 5, 
   },
   dropdownLink: {
     color: '#61dafb',

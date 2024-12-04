@@ -9,7 +9,6 @@ export default function SobreScreen() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSmallScreen, setIsSmallScreen] = useState(width < 600);
 
-  // Detectando mudança de tela
   React.useEffect(() => {
     const handleResize = () => {
       setIsSmallScreen(Dimensions.get('window').width < 600);
@@ -63,9 +62,9 @@ export default function SobreScreen() {
 
         <View style={styles.imageContainer}>
           <Image
-            style={[styles.image, { width: width * 0.8, height: (width * 0.8) * 0.6 }]} // A imagem agora tem uma largura proporcional
+            style={[styles.image, { width: width * 0.8, height: (width * 0.8) * 0.6 }]} 
             source={require('../assets/images/bar.jpg')}
-            resizeMode="contain" // Melhor escolha para manter a proporção da imagem
+            resizeMode="contain" 
           />
         </View>
 
@@ -130,7 +129,7 @@ const styles = StyleSheet.create({
     top: 56,
     width: '100%',
     zIndex: 20,
-    elevation: 5, // Para Android, garantir que esteja acima
+    elevation: 5, 
   },
   dropdownLink: {
     color: '#61dafb',

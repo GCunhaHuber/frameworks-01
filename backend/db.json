@@ -1,20 +1,90 @@
 {
   "usuarios": [
-    { "id": 1, "email": "gabriel@gmail.com", "senha": "12345" },
-    { "id": 2, "email": "igor@gmail.com", "senha": "12345" }
+    {
+      "id": 1,
+      "email": "gabriel@gmail.com",
+      "senha": "12345"
+    },
+    {
+      "id": 2,
+      "email": "igor@gmail.com",
+      "senha": "12345"
+    },
+    {
+      "id": 3,
+      "name": "igor",
+      "email": "igor1@gmail.com",
+      "password": "1234"
+    }
   ],
   "livros": [
     {
       "id": 1,
       "title": "Contos Gauchescos",
-      "autor": "Joao Simoes Lopes Neto",
-      "capa": "https://cdn.kobo.com/book-images/e53ac409-39d0-4ee7-8d92-23e2f3923fdc/1200/1200/False/contos-gauchescos-9.jpg"
+      "autor": "João Simões Lopes Neto",
+      "capa": "https://www.lpm.com.br/livros/imagens/contos_gauchescos_9788525408273_hd.jpg"
     },
     {
       "id": 2,
       "title": "Lendas do Sul",
-      "autor": "Joao Simoes Lopes Neto",
-      "capa": "https://m.aabbportoalegre.com.br/intranet/modulos/biblioteca/imgs/8562.jpg"
+      "autor": "João Simões Lopes Neto",
+      "capa": "https://www.aabbportoalegre.com.br/intranet/modulos/biblioteca/imgs/8562.jpg"
+    },
+    {
+      "id": 3,
+      "title": "Casos do Romualdo",
+      "autor": "João Simões Lopes Neto",
+      "capa": "https://m.media-amazon.com/images/I/51w6HJj2v7L._AC_UF1000,1000_QL80_.jpg"
+    },
+    {
+      "id": 4,
+      "title": "Prosa dos Pagos",
+      "autor": "Augusto Meyer",
+      "capa": "https://m.media-amazon.com/images/I/81h-EACpKDL._AC_UF1000,1000_QL80_.jpg"
+    },
+    {
+      "id": 6,
+      "title": "O Teatro Sete de Abril: memórias de Pelotas",
+      "autor": "Jorge Audrin",
+      "capa": "https://www.libretos.com.br/images/loja/970/CAPASETE.jpg"
+    },
+    {
+      "id": 7,
+      "title": "A memória de um tempo",
+      "autor": "Carlos Reverbel",
+      "capa": "https://m.media-amazon.com/images/I/41RPrbLYZ7L._SY445_SX342_.jpg"
+    },
+    {
+      "id": 8,
+      "title": "História e Tradição da Cidade de Pelotas",
+      "autor": "Mario Osorio Magalhães",
+      "capa": "https://m.media-amazon.com/images/I/619qXpbBocL._SY466_.jpg"
+    },
+    {
+      "id": 9,
+      "title": "A história das charqueadas de Pelotas",
+      "autor": "Francisco das Neves Alves",
+      "capa": "https://m.media-amazon.com/images/I/51w8huanI0L._SY466_.jpg"
+    }
+  ],
+  "contatos": [
+    {
+      "id": 1,
+      "nome": "gabriel",
+      "email": "gabriel@gmail.com",
+      "mensagem": "Olá, tudo bem?"
+    },
+    {
+      "id": 2,
+      "nome": "igor",
+      "email": "igor8@gmail.com",
+      "mensagem": "Boa noite"
+    },
+    {
+      "id": 3,
+      "nome": "igor",
+      "email": "igor9@gmail.com",
+      "mensagem": "boa noite, tudo bem?"
     }
   ]
 }

@@ -50,7 +50,7 @@ export default function HomeScreen() {
 
         <Image
           style={[styles.image, { width: width * 0.85, height: (width * 0.85) * 0.6 }]}
-          source={{ uri: '../assets/images/frase-home.png' }}
+          source={{ uri: '../assets/images/img-home.jpg' }}
           resizeMode="contain"
         />
 
@@ -65,7 +65,7 @@ export default function HomeScreen() {
             <Text style={styles.buttonText}>Conheça nossos serviços</Text>
           </Link>
           <Link href={"/contato" as Href} style={styles.button}>
-            <Text style={styles.buttonText}>Entre em contato</Text>
+            <Text style={styles.buttonText1}>Entre em contato</Text>
           </Link>
         </View>
       </ScrollView>
@@ -113,7 +113,7 @@ const styles = StyleSheet.create({
     top: 56,
     width: '100%',
     zIndex: 20,
-    elevation: 5, // Para Android, garantir que esteja acima
+    elevation: 5, 
   },
   dropdownLink: {
     color: '#61dafb',
@@ -123,7 +123,7 @@ const styles = StyleSheet.create({
   },
   scrollContainer: {
     alignItems: 'center',
-    paddingTop: 80, // Ajustado para não cobrir o conteúdo com o navbar fixo
+    paddingTop: 80, 
     paddingBottom: 20,
     paddingHorizontal: 16,
   },
@@ -169,6 +169,12 @@ const styles = StyleSheet.create({
   buttonText: {
     color: '#20232a',
     fontWeight: 'bold',
+    fontSize: 16
+  },
+  buttonText1: {
+    color: '#20232a',
+    fontWeight: 'bold',
     fontSize: 16,
+    padding: 28
   },
 });

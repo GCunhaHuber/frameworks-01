@@ -1,5 +1,15 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView, Platform, Alert, useWindowDimensions } from 'react-native';
+import {
+    View,
+    Text,
+    StyleSheet,
+    TextInput,
+    TouchableOpacity,
+    ScrollView,
+    Platform,
+    Alert,
+    useWindowDimensions,
+} from 'react-native';
 import { Link } from 'expo-router';
 
 export default function CadastroScreen() {
@@ -9,7 +19,7 @@ export default function CadastroScreen() {
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
 
-    const showAlert = (title, message) => {
+    const showAlert = (title: string, message: string) => {
         if (Platform.OS === 'web') {
             window.alert(`${title}: ${message}`);
         } else {
@@ -17,7 +27,7 @@ export default function CadastroScreen() {
         }
     };
 
-    const handleCadastro = () => {
+    const handleCadastro = async () => {
         const trimmedName = name.trim();
         const trimmedEmail = email.trim();
         const trimmedPassword = password.trim();
@@ -25,14 +35,51 @@ export default function CadastroScreen() {
 
         if (!trimmedName || !trimmedEmail || !trimmedPassword || !trimmedConfirmPassword) {
             showAlert('Erro', 'Por favor, preencha todos os campos corretamente.');
-        } else if (trimmedPassword !== trimmedConfirmPassword) {
+            return;
+        }
+
+        if (trimmedPassword !== trimmedConfirmPassword) {
             showAlert('Erro', 'As senhas não coincidem.');
-        } else {
-            showAlert('Sucesso', 'Cadastro concluído com sucesso!');
+            return;
+        }
+
+        try {
+            const response = await fetch('http://localhost:3001/usuarios');
+            const users = await response.json();
+
+            const nextId = users.length > 0 ? Math.max(...users.map((u: any) => u.id)) + 1 : 1;
+
+            const userData = {
+                id: nextId,
+                name: trimmedName,
+                email: trimmedEmail,
+                password: trimmedPassword,
+            };
+
+            const postResponse = await fetch('http://localhost:3001/usuarios', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(userData),
+            });
+
+            if (postResponse.ok) {
+                showAlert('Sucesso', 'Cadastro concluído com sucesso!');
+                setName('');
+                setEmail('');
+                setPassword('');
+                setConfirmPassword('');
+            } else {
+                const error = await postResponse.json();
+                showAlert('Erro', `Falha ao cadastrar: ${error.message || 'Erro desconhecido'}`);
+            }
+        } catch (error) {
+            showAlert('Erro', 'Não foi possível conectar ao servidor.');
+            console.error(error);
         }
     };
 
-    // Define estilos dinâmicos de acordo com a largura da tela
     const isLargeScreen = width > 1280;
     const inputWidth = isLargeScreen ? '80%' : '100%';
     const buttonWidth = isLargeScreen ? '80%' : '100%';
@@ -82,8 +129,12 @@ export default function CadastroScreen() {
                     <Text style={styles.buttonText}>Cadastrar</Text>
                 </TouchableOpacity>
 
-                <Link href="/login" style={styles.linkText}>Já tem uma conta? Fazer login</Link>
-                <Link href="/" style={styles.linkText}>Ir para a home</Link>
+                <Link href="/login" style={styles.linkText}>
+                    Já tem uma conta? Fazer login
+                </Link>
+                <Link href="/" style={styles.linkText}>
+                    Ir para a home
+                </Link>
             </ScrollView>
         </View>
     );

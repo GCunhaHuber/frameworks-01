@@ -11,7 +11,6 @@ export default function LoginScreen() {
 
     const handleLogin = async () => {
         try {
-            // Faz a requisição ao JSON Server para buscar o usuário pelo email e senha
             const response = await axios.get(`http://localhost:3001/usuarios`, {
                 params: {
                     email,
@@ -20,10 +19,8 @@ export default function LoginScreen() {
             });
 
             if (response.data.length > 0) {
-                // Usuário encontrado, redireciona para a tela de listagem
                 router.push({ pathname: '/listagem', params: { email } });
             } else {
-                // Nenhum usuário corresponde aos dados de login
                 setWrongInput(true);
             }
         } catch (error) {

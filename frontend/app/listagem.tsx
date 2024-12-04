@@ -2,13 +2,25 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity, ActivityIndicator } from 'react-native';
 import axios from 'axios';
 
-export default function ListagemScreen({ route }) {
+type RouteProps = {
+    params: {
+        email: string;
+    };
+};
+
+type Livro = {
+    id: number;
+    title: string;
+    autor: string;
+    capa: string;
+};
+
+export default function ListagemScreen({ route }: { route: RouteProps }) {
     const email = route?.params?.email || '';
-    const [livros, setLivros] = useState([]);
+    const [livros, setLivros] = useState<Livro[]>([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        // Faz a requisição para buscar os livros
         axios.get('http://localhost:3001/livros')
             .then(response => {
                 setLivros(response.data);
@@ -20,7 +32,7 @@ export default function ListagemScreen({ route }) {
             });
     }, []);
 
-    const renderItem = ({ item }) => (
+    const renderItem = ({ item }: { item: Livro }) => (
         <TouchableOpacity style={styles.card}>
             <Image source={{ uri: item.capa }} style={styles.image} />
             <View style={styles.textContainer}>
@@ -33,14 +45,14 @@ export default function ListagemScreen({ route }) {
     return (
         <View style={styles.container}>
             <Text style={styles.title}>- LISTAGEM DE LIVROS -</Text>
-            <Text style={styles.subtitle}>Bem-vindo, {email}</Text>
+            <Text style={styles.subtitle}>Bem-vindo {email}</Text>
 
             {loading ? (
                 <ActivityIndicator size="large" color="#61dafb" style={styles.loading} />
             ) : (
                 <FlatList
                     data={livros}
-                    keyExtractor={item => item.id.toString()}
+                    keyExtractor={(item) => item.id.toString()}
                     renderItem={renderItem}
                     contentContainerStyle={styles.listContainer}
                 />
